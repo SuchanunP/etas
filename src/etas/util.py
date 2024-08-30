@@ -49,7 +49,7 @@ def get_fit_df(df, window, m_c=3.0):
 
 
 def fit_etas(df, window, m_c=3.0):
-    from etas import Etas
+    from __init__ import Etas
     window_df = get_fit_df(df=df, window=window, m_c=m_c)
     if window_df.shape[0]:
         print(f'windows: {window}\ndf.n_rows: {window_df.shape[0]}\n')

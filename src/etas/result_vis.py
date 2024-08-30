@@ -1,9 +1,10 @@
-import rp_project
+import __init__
 import numpy as np
 import geopandas as gpd
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter, AutoMinorLocator)
 import matplotlib.pyplot as plt
-from rp_project import EarthQuakeVisualizer, FilterOutput
-from rp_project.etas import Etas, EtasParams
+from __init__ import EarthQuakeVisualizer, FilterOutput
+from __init__.etas import Etas, EtasParams
 import pandas as pd
 import json
 
@@ -29,7 +30,7 @@ def make_2d(items, n_columns: int, dtype):
 
 def plot_table(etas_models: np.ndarray, windows: list[tuple[int, int]],
                n_columns: int, n_years=1, figsize=(33, 33)):
-    from rp_project.etas import Etas
+    from __init__.etas import Etas
     """
 
     :param etas_models:
@@ -81,12 +82,9 @@ def plot_table(etas_models: np.ndarray, windows: list[tuple[int, int]],
     return fig, axes
 
 
-from matplotlib.ticker import (MultipleLocator, FormatStrFormatter, AutoMinorLocator)
-
-
 class TimeWindowETAS:
 
-    def __init__(self, etas_dict, years_1, years_2, years_5, years_10, custom_windows=None): #(2020, 2024), (1990, 2024)
+    def __init__(self, etas_dict, years_1, years_2, years_5, years_10, custom_windows=None):
         self.params = ['u', 'K0', 'alpha', 'p', 'c']
         self.etas_dict = etas_dict
         self.years_1 = years_1
@@ -107,7 +105,7 @@ class TimeWindowETAS:
         self.u_20_23_std = None
 
         self.u_all = None
-        self.u_all_std = None  # Todo: check
+        self.u_all_std = None
 
         self.K0 = None
         self.K0_2 = None
@@ -142,7 +140,7 @@ class TimeWindowETAS:
         self.p_all_std = None
 
         self.alpha = None
-        self.alpha_2 = None  # is a list
+        self.alpha_2 = None
         self.alpha_5 = None
         self.alpha_10 = None
 
@@ -251,14 +249,6 @@ class TimeWindowETAS:
                 self.__setattr__(f'{name}_{str(start_year)[2:]}_{str(end_year-1)[2:]}_std',
                                  self.etas_dict[f'[{start_year}, {end_year}]'].params[f'{name}_std'])
 
-        # if self.etas_dict['[2020, 2024]'] is not None:
-        #     self.__setattr__(f'{name}_20_23', self.etas_dict['[2020, 2024]'].params[name])
-        #     self.__setattr__(f'{name}_20_23_std', self.etas_dict['[2020, 2024]'].params[f'{name}_std'])
-        #
-        # if self.etas_dict['[1990, 2024]'] is not None:
-        #     self.__setattr__(f'{name}_all', self.etas_dict['[1990, 2024]'].params[name])
-        #     self.__setattr__(f'{name}_all_std', self.etas_dict['[1990, 2024]'].params[f'{name}_std'])
-
     def plot_params(self, name: str, figsize=(16, 4)):
         plt.figure(figsize=figsize)
 
@@ -290,7 +280,7 @@ class TimeWindowETAS:
                                  self.etas_dict[f'[{start_year}, {end_year}]'].params[name])
                 self.__setattr__(f'{name}_{str(start_year)[2:]}_{str(end_year-1)[2:]}_std',
                                  self.etas_dict[f'[{start_year}, {end_year}]'].params[f'{name}_std'])
-                mid_point = start_year + (end_year - start_year) / 2  # 24-20 /2 -> 2022
+                mid_point = start_year + (end_year - start_year) / 2
                 half_length = (end_year - start_year) / 2
                 if end_year - start_year == 1:
                     label = f'{start_year} window'
@@ -302,46 +292,13 @@ class TimeWindowETAS:
                              linestyle='None', marker=self.custom_markers[marker_idx], xerr=half_length, label=label)
                 marker_idx += 1
 
-        # if self.etas_dict['[2020, 2024]'] is not None:
-        #     plt.errorbar(2022,
-        #                  self.__getitem__(f'{name}_20_23'),
-        #                  self.__getitem__(f'{name}_20_23_std'),
-        #                  linestyle='None', marker='x', xerr=2, label='2020-2023 window')
-        #
-        # if self.etas_dict['[1990, 2024]'] is not None:
-        #     plt.errorbar(2007, #(2024-1990)/2
-        #                  self.__getitem__(f'{name}_all'),
-        #                  self.__getitem__(f'{name}_all_std'),
-        #                  linestyle='None', marker='^', xerr=17, label=f'1990-2023 window')
-        #
-        # if self.etas_dict['[1999, 2019]'] is not None:
-        #     plt.errorbar(2007,
-        #                  self.__getitem__(f'{name}_all'),
-        #                  self.__getitem__(f'{name}_all_std'),
-        #                  linestyle='None', marker='^', xerr=17, label=f'1999-2018 window')
-
-        # plt.legend(fontsize=20)
         plt.xticks(fontsize=10)
         plt.yticks(fontsize=10)
 
-        plt.gca().yaxis.set_ticks_position('both')  # Ticks on all 4 sides
+        plt.gca().yaxis.set_ticks_position('both')
         plt.gca().xaxis.set_ticks_position('both')
-        # plt.xticks(np.arange(-1.21, -0.79, 0.04)) # Axes ranges
-        # plt.yticks(np.arange(-0.9,0.9, 0.1))
-        # ax.xaxis.set_major_locator(MultipleLocator(0.05)) # Intervals for major x-ticks
         plt.gca().xaxis.set_minor_locator(AutoMinorLocator())
-        # Minor ticks : Automatic filling based on the ytick range
-        # ax.yaxis.set_major_locator(MultipleLocator(0.3))  # For y-ticks
-        # ax.yaxis.set_minor_locator(AutoMinorLocator())
 
         plt.grid()
-        symbols = {'u': '$\mu$', 'alpha': '$\\alpha$', 'c': '$c$', 'K0': '$K_0$', 'p': '$p$'}
-        # plt.ylabel(symbols[name], fontsize=18)
         plt.xlabel('Year', fontsize=18)
         return plt.gca()
-
-
-#             plt.legend()
-# plt.legend(prop={'size': 6})
-# plt.show()
-#         return y, ax

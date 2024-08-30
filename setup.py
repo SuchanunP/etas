@@ -49,8 +49,5 @@ setup(name=package_name,
       license='Private',
       zip_safe=False,
       keywords='',
-      classifiers=[''],
-      package_data={
-          package_name: ['py.typed'],
-      }
+      classifiers=['']
       )
