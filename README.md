@@ -13,7 +13,8 @@ vis.visualize()
 
 ```
 from etas.util import fit_etas, calculate_std_errors
-# df: pandas dataframe with columns: 
+
+# df: pandas dataframe with columns: date, magnitude
 # window: a tuple of start year (inclusive) and end year (exlusive)
 # m_c: minimum magnitude that will be considered
 
