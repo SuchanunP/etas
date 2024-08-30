@@ -1,4 +1,16 @@
+## etas
+
+This library is a tool to visualize an earthquake catalog and fit ETAS model in different time windows. 
+
+### Installation
+```
+# parent directory
+cd etas
+pip install -e .
+```
+
 ### Visualization of an earthquake catalog
+
 ```
 from etas.vis import EarthQuakeVisualizer
 
